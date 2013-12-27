@@ -1,7 +1,24 @@
 #ifndef ESC64_I_H_INCLUDED
 #define ESC64_I_H_INCLUDED
 
+#define INTTMP 0x0100ff00
+#define INTVAR 0x40ff0000
+#define FLTTMP 0x000f0ff0
+#define FLTVAR 0xfff00000
+
+#define INTRET 0x00000004
+#define FLTRET 0x00000003
+
+#define readsreg(p) \
+        (generic((p)->op)==INDIR && (p)->kids[0]->op==VREG+P)
+#define setsrc(d) ((d) && (d)->x.regnode && \
+        (d)->x.regnode->set == src->x.regnode->set && \
+        (d)->x.regnode->mask&src->x.regnode->mask)
+
+#define relink(a, b) ((b)->x.prev = (a), (a)->x.next = (b))
+
 #include "c.h"
+
 #define NODEPTR_TYPE Node
 #define OP_LABEL(p) ((p)->op)
 #define LEFT_CHILD(p) ((p)->kids[0])
@@ -29,23 +46,23 @@ static void progend(void);
 static void segment(int);
 static void space(int);
 static void target(Node);
-static int imm(Node);
-static void renameregs(void);
-extern Interface sparcIR, solarisIR;
-static void defsymbol2(Symbol);
-static void export2(Symbol);
-static void globalend(void);
-static void global2(Symbol);
-static void segment2(int);
-static void progend2(void);
+static int bitcount(unsigned);
+static Symbol argreg(int, int, int, int, int);
 
-extern char *stabprefix;
-extern void stabblock(int, int, Symbol*);
-extern void stabend(Coordinate *, Symbol, Coordinate **, Symbol *, Symbol *);
-extern void stabfend(Symbol, int);
-extern void stabinit(char *, int, char *[]);
-extern void stabline(Coordinate *);
-extern void stabsym(Symbol);
-extern void stabtype(Symbol);
+static Symbol ireg[32], freg2[32], d6;
+static Symbol iregw, freg2w;
+static int tmpregs[] = {3, 9, 10};
+static Symbol blkreg;
+
+static int gnum = 8;
+static int pic;
+
+static int cseg;
+
+static void stabinit(char *, int, char *[]);
+static void stabline(Coordinate *);
+static void stabsym(Symbol);
+
+static char *currentfile;
 
 #endif
