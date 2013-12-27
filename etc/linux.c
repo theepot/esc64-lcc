@@ -4,13 +4,39 @@
 
 static char rcsid[] = "$Id$";
 
+/*path to gcc cpp*/
+#ifndef CPPPATH
+#error CPPPATH is not defined
+#endif
+
+/*path to ld-linux.so.2*/
+#ifndef LD_LINUX_SO
+#error LD_LINUX_SO is not defined
+#endif
+
+/*path to crt1.o*/
+#ifndef CRT1_O
+#error CRT1_O is not defined
+#endif
+
+/*path to crti.o*/
+#ifndef CRTI_O
+#error CRTI_O is not defined
+#endif
+
+/*path to crtn.o*/
+#ifndef CRTN_O
+#error CRTN_O is not defined
+#endif
+
 #ifndef LCCDIR
-#define LCCDIR "/usr/local/lib/lcc/"
+/*#define LCCDIR "/usr/local/lib/lcc/"*/
+#error LCCDIR is not defined
 #endif
 
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
 char inputs[256] = "";
-char *cpp[] = { LCCDIR "gcc/cpp",
+char *cpp[] = { CPPPATH,
 	"-U__GNUC__", "-D_POSIX_SOURCE", "-D__STDC__=1", "-D__STRICT_ANSI__",
 	"-Dunix", "-Di386", "-Dlinux",
 	"-D__unix__", "-D__i386__", "-D__linux__", "-D__signed__=signed",
@@ -20,23 +46,23 @@ char *com[] = {LCCDIR "rcc", "-target=x86/linux", "$1", "$2", "$3", 0 };
 char *as[] = { "/usr/bin/as", "-o", "$3", "$1", "$2", 0 };
 char *ld[] = {
 	/*  0 */ "/usr/bin/ld", "-m", "elf_i386", "-dynamic-linker",
-	/*  4 */ "/lib/ld-linux.so.2", "-o", "$3",
-	/*  7 */ "/usr/lib/crt1.o", "/usr/lib/crti.o",
+	/*  4 */ LD_LINUX_SO, "-o", "$3",
+	/*  7 */ CRT1_O, CRTI_O,
 	/*  9 */ LCCDIR "/gcc/crtbegin.o", 
                  "$1", "$2",
 	/* 12 */ "-L" LCCDIR,
 	/* 13 */ "-llcc",
 	/* 14 */ "-L" LCCDIR "/gcc", "-lgcc", "-lc", "-lm",
 	/* 18 */ "",
-	/* 19 */ LCCDIR "/gcc/crtend.o", "/usr/lib/crtn.o",
+	/* 19 */ LCCDIR "/gcc/crtend.o", CRTN_O,
 	0 };
 
 extern char *concat(char *, char *);
 
 int option(char *arg) {
   	if (strncmp(arg, "-lccdir=", 8) == 0) {
-		if (strcmp(cpp[0], LCCDIR "gcc/cpp") == 0)
-			cpp[0] = concat(&arg[8], "/gcc/cpp");
+		/*if (strcmp(cpp[0], LCCDIR "gcc/cpp") == 0)
+			cpp[0] = concat(&arg[8], "/gcc/cpp");*/
 		include[0] = concat("-I", concat(&arg[8], "/include"));
 		include[1] = concat("-I", concat(&arg[8], "/gcc/include"));
 		ld[9]  = concat(&arg[8], "/gcc/crtbegin.o");

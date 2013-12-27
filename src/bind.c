@@ -10,6 +10,7 @@ xx(x86/linux,    x86linuxIR) \
 xx(symbolic/osf, symbolic64IR) \
 xx(symbolic/irix,symbolicIR) \
 xx(symbolic,     symbolicIR) \
+xx(esc64,        esc64IR) \
 xx(bytecode,     bytecodeIR) \
 xx(null,         nullIR)
 

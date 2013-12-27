@@ -233,6 +233,14 @@ cc -g -c -o $BUILDDIR/host.o etc/solaris.c
 cc -g -o $BUILDDIR/lcc $BUILDDIR/lcc.o $BUILDDIR/host.o</pre>
 </blockquote>
 
+<p>
+NOTE: when building for a linux host use:
+<blockquote>
+<pre>make -e HOSTFILE=etc/linux.c CFLAGS='-DLCCDIR=\"[lcc install dir]\" -DCPPPATH=\"[cpp]\" -DLD_LINUX_SO=\"[ld-linux.so.2 path]\" -DCRT1_O=\"[crt1.o path]\" -DCRTI_O=\"[crti.o path]\" -DCRTN_O=\"[crtn.o path]\"' lcc</pre>
+</blockquote>
+Make sure there is a trailing '/' after [lcc install dir]!
+</p>
+
 <p>Of course, the actual value of <code>BUILDDIR</code> will appear in place of
 <code>$BUILDDIR</code>. The symbolic name <code>HOSTFILE</code> specifies the path to the host-specific part,
 either one in the distribution or <em>whatever</em><code>.c</code>. Some versions of make

@@ -1763,7 +1763,7 @@ part8(){
 #endif
 		sigsave = sigfpe;
 		printf("\n    Trying to compute 0 / 0 produces ...");
-		if (!setjmp(ovfl_buf)) printf("  %.7e .\n", Zero / MyZero);
+		if (!setjmp(ovfl_buf)) printf("  nan .\n", Zero / MyZero);
 		sigsave = 0;
 #ifndef NOPAUSE
 		}
