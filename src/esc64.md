@@ -357,8 +357,8 @@ stmt:	NEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\t\tjne\t\t%a\n"		1
 
 
 con:	ADDRGP2     				"%a"
-reg16:	ADDRFP2						"\tmov\t\tr5, %a\t\t\t;reg16: ADDRFP2(0)\n\tsub\t\t%c, r4, r5\t\t;reg16: ADDRFP2(1)\n"		1
-reg16:	ADDRLP2						"\tmov\t\tr5, %a\t\t\t;reg16: ADDRLP2(0)\n\tsub\t\t%c, r4, r5\t\t;reg16: ADDRLP2(1)\n"		1
+reg16:	ADDRFP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRFP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRFP2(1)\n"		1
+reg16:	ADDRLP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRLP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRLP2(1)\n"		1
 
 
 reg16:	CALLI2(reg16)			"\tcall	%0\n"		1

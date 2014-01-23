@@ -37,7 +37,7 @@ static char rcsid[] = "$Id$";
 char *suffixes[] = { ".c", ".i", ".s", ".o", ".out", 0 };
 char inputs[256] = "";
 char *cpp[] = { CPPPATH,
-	"-U__GNUC__", "-D_POSIX_SOURCE", "-D__STDC__=1", "-D__STRICT_ANSI__",
+	"-U__GNUC__", "-D_POSIX_SOURCE", "-D__STRICT_ANSI__",
 	"-Dunix", "-Di386", "-Dlinux",
 	"-D__unix__", "-D__i386__", "-D__linux__", "-D__signed__=signed",
 	"$1", "$2", "$3", 0 };

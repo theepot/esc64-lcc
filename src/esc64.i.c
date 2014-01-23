@@ -21,9 +21,6 @@ static void progbeg(int argc, char *argv[])
 	{
 		ireg[i] = mkreg("r%d", i, 1, IREG);
 	}
-//	reg5 = mkreg("r5", 5, 1, IREG);
-//	regsp = mkreg("sp", 6, 1, IREG);
-//	regpc = mkreg("pc", 7, 1, IREG);
 
 	iregw = mkwildcard(ireg);
 
@@ -184,14 +181,14 @@ static void local(Symbol p)
  *		|					|	high addresses
  *		| caller frame		|
  *		|-------------------|
- *		| incomming args	|	-12
+ *		| incomming args	|	12
  *		|-------------------|
- *		| return addr		|	-10
+ *		| return addr		|	10
  *		|-------------------|
- *		| saved regs		|	-8
- *		| (r0-r4)			|	 0		<-- frame pointer (r4)
+ *		| saved regs		|	8
+ *		| (r0-r4)			|	0		<-- frame pointer (r4)
  *		|-------------------|
- *		| locals + temps	|	+localoffset
+ *		| locals + temps	|
  *		|-------------------|
  *		| callee frame		|
  *		|					|	low addresses
@@ -242,8 +239,8 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	if(framesize > 0)
 	{
 		print(
-			"\tmov\t\tr5, %d\n"
-			"\tsub\t\tsp, sp, r5\t\t;allocate space for locals\n",
+			"\tmov\t\t__tmpreg, %d\n"
+			"\tsub\t\tsp, sp, __tmpreg\t\t;allocate space for locals\n\n",
 			framesize);
 	}
 
@@ -252,7 +249,6 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 
 	//restore sp, frame pointer and temps
 	print(
-		"\n"
 		"\tmov\t\tsp, r4\n"
 		"\tpop\t\tr4\n"
 		"\tpop\t\tr3\n"
@@ -434,7 +430,7 @@ Interface esc64IR =
 	0, /* mulops_calls */
 	0, /* wants_callb */
 	0, /* wants_argb */
-	1, /* left_to_right */
+	0, /* left_to_right */
 	0, /* wants_dag */
 	0, /* unsigned_char */
 
