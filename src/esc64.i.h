@@ -1,13 +1,17 @@
 #ifndef ESC64_I_H_INCLUDED
 #define ESC64_I_H_INCLUDED
 
-#define INTTMP 0x0100ff00
-#define INTVAR 0x40ff0000
-#define FLTTMP 0x000f0ff0
-#define FLTVAR 0xfff00000
+//	registers:
+//		r0-r3	temporaries
+//		r4		frame pointer, reserved
+//		r5		reserved
+//		sp		reserved
+//		pc		reserved
 
-#define INTRET 0x00000004
-#define FLTRET 0x00000003
+#define REG_SP		6
+#define REG_PC		7
+
+#define TREG_MASK	0xF
 
 #define readsreg(p) \
         (generic((p)->op)==INDIR && (p)->kids[0]->op==VREG+P)
@@ -49,20 +53,26 @@ static void target(Node);
 static int bitcount(unsigned);
 static Symbol argreg(int, int, int, int, int);
 
-static Symbol ireg[32], freg2[32], d6;
-static Symbol iregw, freg2w;
-static int tmpregs[] = {3, 9, 10};
-static Symbol blkreg;
+static Symbol ireg[32];
+static Symbol iregw;
 
-static int gnum = 8;
+//static Symbol reg5;
+//static Symbol regsp;
+//static Symbol regpc;
+
+//TODO remove me!!!
+static Symbol freg2[32];
+static Symbol d6;
 static int pic;
-
+static int gnum;
 static int cseg;
+static const char* currentfile;
+//end
+
+static int cur_seg;
 
 static void stabinit(char *, int, char *[]);
 static void stabline(Coordinate *);
 static void stabsym(Symbol);
-
-static char *currentfile;
 
 #endif
