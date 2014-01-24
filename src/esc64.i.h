@@ -2,11 +2,11 @@
 #define ESC64_I_H_INCLUDED
 
 //	registers:
-//		r0-r3	temporaries
-//		r4		frame pointer, reserved
-//		r5		reserved
-//		sp		reserved
-//		pc		reserved
+//		r0-r3			temporaries
+//		r4/__tmpreg		reserved by assembler
+//		r5/__bp			base pointer, see function()
+//		r6/sp			stack pointer
+//		r7/pc			program counter
 
 #define REG_SP		6
 #define REG_PC		7

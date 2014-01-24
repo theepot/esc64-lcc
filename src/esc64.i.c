@@ -176,23 +176,34 @@ static void local(Symbol p)
 	}
 }
 
-/**
- *	CALL FRAME:
- *		|					|	high addresses
- *		| caller frame		|
- *		|-------------------|
- *		| incomming args	|	12
- *		|-------------------|
- *		| return addr		|	10
- *		|-------------------|
- *		| saved regs		|	8
- *		| (r0-r4)			|	0		<-- frame pointer (r4)
- *		|-------------------|
- *		| locals + temps	|
- *		|-------------------|
- *		| callee frame		|
- *		|					|	low addresses
- */
+//CALL FRAME//
+//
+//	|                    | HIGH ADDRESSES
+//	|  caller frame      |
+//	|____________________|
+//	|                    |
+//	|  arguments         |
+//	|____________________| 12  NOTE: if the function returns a structure, the last actual argument will be 
+//	|  return  (lo)      | 11        a pointer to an area of memory to return the structure in.
+//	|__________(hi)______| 10        the last "real" argument will be at bp+14
+//	|  saves r0(lo)      | 9
+//	|          (hi)      | 8
+//	|        r1(lo)      | 7
+//	|          (hi)      | 6
+//	|        r2(lo)      | 5
+//	|          (hi)      | 4
+//	|        r3(lo)      | 3
+//	|          (hi)      | 2
+//	|        bp(lo)      | 1
+//	|__________(hi)______| 0  <- base pointer
+//	|                    |
+//	|  locals + temps    |
+//	|____________________|
+//	|                    |
+//	|  callee frame      |
+//	|                    | LOW ADDRESSES
+//
+//////////////
 static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 {
 	int i;
@@ -210,8 +221,8 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		"\tpush\tr1\n"
 		"\tpush\tr2\n"
 		"\tpush\tr3\n"
-		"\tpush\tr4\n"
-		"\tmov\t\tr4, sp\n\n");
+		"\tpush\t__bp\n"
+		"\tmov\t\t__bp, sp\n");
 
 	//arguments
 	usedmask[0] = usedmask[1] = 0;
@@ -249,17 +260,14 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 
 	//restore sp, frame pointer and temps
 	print(
-		"\tmov\t\tsp, r4\n"
-		"\tpop\t\tr4\n"
+		"\tmov\t\tsp, __bp\n"
+		"\tpop\t\t__bp\n"
 		"\tpop\t\tr3\n"
 		"\tpop\t\tr2\n"
 		"\tpop\t\tr1\n"
-		"\tpop\t\tr0\n");
-
-	//return
-	print("\tret\n");
-
-	print(";;end %s\n\n", f->x.name);
+		"\tpop\t\tr0\n"
+		"\tret\n");
+		";;end %s\n\n", f->x.name);
 }
 
 static void defconst(int suffix, int size, Value v)
