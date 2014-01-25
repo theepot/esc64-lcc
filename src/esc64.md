@@ -334,43 +334,44 @@ reg16:	LOADU2(reg16)				"\tmov		%c, %0\n"				move(a)
 stmt:	LABELV						"# labelv\n"
 
 
-stmt:	JUMPV(reg16)				"\tjmp		%0\n"   				1
-stmt:	JUMPV(con)					"\tjmp		%0\n"   				1
+stmt:	JUMPV(reg16)				"\tjmp		%0\n"   					1
+stmt:	JUMPV(con)					"\tjmp		%0\n"   					1
 
-stmt:	EQI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjeq\t\t%a\n"		1
+stmt:	EQI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjeq\t\t%a\n"		1
 stmt:	EQU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjeq\t\t%a\n"		1
 
-stmt:	GEI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjge\t\t%a\n"		1
+stmt:	GEI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjge\t\t%a\n"		1
 stmt:	GEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjge\t\t%a\n"		1
 
-stmt:	GTI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjgt\t\t%a\n"			1
-stmt:	GTU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjgt\t\t%a\n"			1
+stmt:	GTI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjgt\t\t%a\n"		1
+stmt:	GTU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjgt\t\t%a\n"		1
 
-stmt:	LEI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjle\t\t%a\n"		1
+stmt:	LEI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjle\t\t%a\n"		1
 stmt:	LEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjle\t\t%a\n"		1
 
-stmt:	LTI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjlt\t\t%a\n"			1
-stmt:	LTU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjlt\t\t%a\n"			1
+stmt:	LTI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjlt\t\t%a\n"		1
+stmt:	LTU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjlt\t\t%a\n"		1
 
-stmt:	NEI2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjne\t\t%a\n"		1
+stmt:	NEI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 stmt:	NEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 
 
 con:	ADDRGP2     				"%a"
+reg16:	ADDRGP2     				"\tmov\t\t%c, %a\t\t;reg16: ADDRGP2\n"	1
 reg16:	ADDRFP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRFP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRFP2(1)\n"		1
 reg16:	ADDRLP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRLP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRLP2(1)\n"		1
 
 
-reg16:	CALLI2(reg16)			"\tcall	%0\n"		1
-reg16:	CALLP2(reg16)			"\tcall	%0\n"		1
-reg16:	CALLU2(reg16)			"\tcall	%0\n"		1
+reg16:	CALLI2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
+reg16:	CALLP2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
+reg16:	CALLU2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
 
-reg16:	CALLI2(con)				"\tcall	%0\n"		1
-reg16:	CALLP2(con)				"\tcall	%0\n"		1
-reg16:	CALLU2(con)				"\tcall	%0\n"		1
+reg16:	CALLI2(con)				"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
+reg16:	CALLP2(con)				"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
+reg16:	CALLU2(con)				"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
 
-stmt:	CALLV(reg16)			"\tcall	%0\n"		1
-stmt:	CALLV(con)				"\tcall	%0\n"		1
+stmt:	CALLV(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
+stmt:	CALLV(con)				"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
 
 
 con:	CNSTP2					"%a"

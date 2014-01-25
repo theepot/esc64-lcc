@@ -186,12 +186,10 @@ static void local(Symbol p)
 //	|____________________|
 //	|                    |
 //	|  arguments         |
-//	|____________________| 12  NOTE: if the function returns a structure, the last actual argument will be 
-//	|  return  (lo)      | 11        a pointer to an area of memory to return the structure in.
-//	|__________(hi)______| 10        the last "real" argument will be at bp+14
-//	|  saves r0(lo)      | 9
-//	|          (hi)      | 8
-//	|        r1(lo)      | 7
+//	|____________________| 10  NOTE: if the function returns a structure, the last actual argument will be 
+//	|  return  (lo)      | 9         a pointer to an area of memory to return the structure in.
+//	|__________(hi)______| 8         the last "real" argument will be at bp+14
+//	|  saves r1(lo)      | 7
 //	|          (hi)      | 6
 //	|        r2(lo)      | 5
 //	|          (hi)      | 4
@@ -220,7 +218,6 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 
 	//save temps + frame pointer, set up frame pointer
 	print(
-		"\tpush\tr0\n"
 		"\tpush\tr1\n"
 		"\tpush\tr2\n"
 		"\tpush\tr3\n"
@@ -230,7 +227,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	//arguments
 	usedmask[0] = usedmask[1] = 0;
 	freemask[0] = freemask[1] = ~(unsigned)0;
-	offset = 12; //saved registers + return address
+	offset = 10; //saved registers + return address
 
 	for (i = 0; callee[i]; i++)
 	{
@@ -270,7 +267,6 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		"\tpop\t\tr3\n"
 		"\tpop\t\tr2\n"
 		"\tpop\t\tr1\n"
-		"\tpop\t\tr0\n"
 		"\tret\n"
 		";;end %s\n\n", f->x.name);
 }
