@@ -222,6 +222,7 @@ reg8:	INDIRU1(VREGP)			"# read register\n"
 
 reg16:	INDIRI2(VREGP)			"# read register\n"
 reg16:	INDIRU2(VREGP)			"# read register\n"
+reg16:	INDIRP2(VREGP)			"# read register\n"
 
 
 stmt:	ASGNI1(VREGP, reg8)		"# write register\n"
@@ -229,6 +230,7 @@ stmt:	ASGNU1(VREGP, reg8)		"# write register\n"
 
 stmt:	ASGNI2(VREGP, reg16)	"# write register\n"
 stmt:	ASGNU2(VREGP, reg16)	"# write register\n"
+stmt:	ASGNP2(VREGP, reg16)	"# write register\n"
 
 
 con:	CNSTI1					"%a"
@@ -236,6 +238,9 @@ con:	CNSTU1					"%a"
 
 con:	CNSTI2					"%a"
 con:	CNSTU2					"%a"
+
+
+reg16:	con						"\tmov		%c, %0\t\t;reg16: con\n"	1
 
 
 stmt:	reg8					""
