@@ -240,7 +240,7 @@ con:	CNSTI2					"%a"
 con:	CNSTU2					"%a"
 
 
-reg16:	con						"\tmov		%c, %0\t\t;reg16: con\n"	1
+reg16:	con						"\tmov		%c, %0\t\t\t\t;reg16: con\n"	1
 
 
 stmt:	reg8					""
@@ -267,8 +267,17 @@ stmt:	ASGNP2(reg16, reg16)			"\tst		%0, %1\n"		1
 stmt:	ASGNB(reg16, INDIRB(reg16))		"\tmov\t\tr2, %a\t\t\t;stmt: ASGNB(reg16, INDIRB(reg16)) (0)\n\tcall\t__memcpy\t\t;stmt: ASGNB(reg16, INDIRB(reg16)) (1)\n"	1
 
 
+stmt:	ASGNI1(off, reg8)			"# asgn off\n"		1
+stmt:	ASGNU1(off, reg8)			"# asgn off\n"		1
+
+stmt:	ASGNI2(off, reg16)			"# asgn off\n"		1
+stmt:	ASGNU2(off, reg16)			"# asgn off\n"		1
+
+stmt:	ASGNP2(off, reg16)			"# asgn off\n"		1
+
+
 reg8:	INDIRI1(reg16)			"\tldb		%c, %0\n"		1
-reg8:	INDIRU1(reg16)			"\tldb		%c, %0\n"		1
+reg8:	INDIRU1(reg16)			"\tldb		%c, %0\t\t;reg8:	INDIRU1(reg16)\n"		1
 
 reg16:	INDIRI2(reg16)			"\tld		%c, %0\n"		1
 reg16:	INDIRU2(reg16)			"\tld		%c, %0\n"		1
@@ -276,28 +285,28 @@ reg16:	INDIRU2(reg16)			"\tld		%c, %0\n"		1
 reg16:	INDIRP2(reg16)			"\tld		%c, %0\t\t;reg16: INDIRP2(reg16)\n"		1
 
 
-reg8:	CVII1(INDIRI2(reg16))	"\tldb		%c, %0\n"		1
-reg8:	CVIU1(INDIRI1(reg16))	"\tldb		%c, %0\n"		1
-reg8:	CVIU1(INDIRI2(reg16))	"\tldb		%c, %0\n"		1
-reg8:	CVUI1(INDIRU2(reg16))	"\tldb		%c, %0\n"		1
-reg16:	CVUI2(INDIRU1(reg16))	"\tldb		%c, %0\n"		1
-reg8:	CVUU1(INDIRU2(reg16))	"\tldb		%c, %0\n"		1
-reg16:	CVUU2(INDIRU1(reg16))	"\tldb		%c, %0\n"		1
+reg8:	CVII1(INDIRI2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVII1(INDIRI2(reg16))\n"		1
+reg8:	CVIU1(INDIRI1(reg16))	"\tldb		%c, %0\t\t;reg8:	CVIU1(INDIRI1(reg16))\n"		1
+reg8:	CVIU1(INDIRI2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVIU1(INDIRI2(reg16))\n"		1
+reg8:	CVUI1(INDIRU2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVUI1(INDIRU2(reg16))\n"		1
+reg16:	CVUI2(INDIRU1(reg16))	"\tldb		%c, %0\t\t;reg16:	CVUI2(INDIRU1(reg16))\n"		1
+reg8:	CVUU1(INDIRU2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVUU1(INDIRU2(reg16))\n"		1
+reg16:	CVUU2(INDIRU1(reg16))	"\tldb		%c, %0\t\t;reg16:	CVUU2(INDIRU1(reg16))\n"		1
 
 
 reg16:	CVII2(reg8)				"\tcall		__sext8to16\n"					1
 
-reg16:	CVUI2(reg8)				"\tmov\t\tr6, 0xFF\n\tand\t\t%c, %0, r6\t;LCC: CVUI1(reg8)\n"	1
-reg16:	CVUI2(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUI2(reg16)\n"		move(a)
+reg16:	CVUI2(reg8)				"\tmov\t\t__tmpreg, 0xFF\n\tand\t\t%c, %0, __tmpreg\t;LCC: CVUI1(reg8)\n"	1
+reg16:	CVUI2(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUI2(reg16)\n"		1
 
-reg16:	CVUU2(reg8)				"\tmov\t\tr6, 0xFF\n\tand\t\t%c, %0, r6\t;LCC: CVUU2(reg8)\n"	1
+reg16:	CVUU2(reg8)				"\tmov\t\t__tmpreg, 0xFF\n\tand\t\t%c, %0, __tmpreg\t;LCC: CVUU2(reg8)\n"	1
 
-reg8:	CVII1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVII1(reg16)\n"		move(a)
+reg8:	CVII1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVII1(reg16)\n"		1
 
-reg8:	CVUI1(reg8)				"\tmov\t\t%c, %0\t;LCC: CVUI1(reg8)\n"		move(a)
-reg8:	CVUI1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUI1(reg16)\n"		move(a)
+reg8:	CVUI1(reg8)				"\tmov\t\t%c, %0\t;LCC: CVUI1(reg8)\n"		1
+reg8:	CVUI1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUI1(reg16)\n"		1
 
-reg8:	CVUU1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUU1(reg16)\n"		move(a)
+reg8:	CVUU1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUU1(reg16)\n"		1
 
 
 reg16:	DIVI2(reg16, reg16)			"\tcall		__sdiv16\n"					1
@@ -321,19 +330,19 @@ reg16:	SUBI2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 reg16:	SUBP2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 reg16:	SUBU2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 
-reg16:	LSHI2(reg16, reg16)			"\tshl		%c, %0,%1\n"			1
-reg16:	LSHU2(reg16, reg16)			"\tshl		%c, %0,%1\n"			1
-reg16:	RSHI2(reg16, reg16)			"\tshr		%c, %0,%1\n"			1
-reg16:	RSHU2(reg16, reg16)			"\tshr		%c, %0,%1\n"			1
+reg16:	LSHI2(reg16, reg16)			"\tcall\t__shl16\n"				1
+reg16:	LSHU2(reg16, reg16)			"\tcall\t__shl16\n"				1
+reg16:	RSHI2(reg16, reg16)			"\tcall\t__shr16\n"				1
+reg16:	RSHU2(reg16, reg16)			"\tcall\t__shr16\n"				1
 reg16:	BCOMI2(reg16)				"\tnot		%c, %0\n"				1
 reg16:	BCOMU2(reg16)				"\tnot		%c, %0\n"				1
 reg16:	NEGI2(reg16)				"\tnot\t\t%cm %0\n\tinc\t\t%c, %c\n"		1
 
 
-reg8:	LOADI1(reg16)				"\tmov		%c, %0\n"				move(a)
-reg8:	LOADU1(reg16)				"\tmov		%c, %0\n"				move(a)
-reg16:	LOADI2(reg16)				"\tmov		%c, %0\n"				move(a)
-reg16:	LOADU2(reg16)				"\tmov		%c, %0\n"				move(a)
+reg8:	LOADI1(reg16)				"\tmov		%c, %0\t\t;reg8:	LOADI1(reg16)\n"				move(a)
+reg8:	LOADU1(reg16)				"\tmov		%c, %0\t\t;reg8:	LOADU1(reg16)\n"				move(a)
+reg16:	LOADI2(reg16)				"\tmov		%c, %0\t\t;reg16:	LOADI2(reg16)\n"				move(a)
+reg16:	LOADU2(reg16)				"\tmov		%c, %0\t\t;reg16:	LOADU2(reg16)\n"				move(a)
 
 
 stmt:	LABELV						"# labelv\n"
@@ -363,8 +372,12 @@ stmt:	NEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 
 con:	ADDRGP2     				"%a"
 reg16:	ADDRGP2     				"\tmov\t\t%c, %a\t\t;reg16: ADDRGP2\n"	1
+
 reg16:	ADDRFP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRFP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRFP2(1)\n"		1
+off:	ADDRFP2						"# addrfp2"
+
 reg16:	ADDRLP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRLP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRLP2(1)\n"		1
+off:	ADDRLP2						"# addrlp2"
 
 
 reg16:	CALLI2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1

@@ -222,6 +222,18 @@ extern void execv(const char *, char *[]);
 static int _spawnvp(int mode, const char *cmdname, const char *const argv[]) {
 	int pid, n, status;
 
+	//FIXME temp debug
+	{
+		char** p;
+		fprintf(stderr, "_spawnvp(): %s", cmdname);
+		for(p = argv; *p; ++p)
+		{
+			fprintf(stderr, " %s", *p);
+		}
+		fprintf(stderr, "\n");
+	}
+	//end
+
 	switch (pid = fork()) {
 	case -1:
 		fprintf(stderr, "%s: no more processes\n", progname);

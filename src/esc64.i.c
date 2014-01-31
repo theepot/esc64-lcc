@@ -94,7 +94,12 @@ static void target(Node p)
 	case MOD+U:
 	case MUL+I:
 	case MUL+U:
-		assert(opsize(p->op) == 2 && "target(): div/mod/mul opsize != 2");
+	case LSH+I:
+	case LSH+U:
+	case RSH+I:
+	case RSH+U:
+		assert(opsize(p->op) == 2 && "target(): div/mod/mul/shift opsize != 2");
+		setreg(p, ireg[0]);
 		rtarget(p, 0, ireg[0]);
 		rtarget(p, 1, ireg[1]);
 		break;
@@ -134,34 +139,17 @@ static void emit2(Node p)
 		print("%s:\n", p->syms[0]->x.name);
 		break;
 
-//	case CVU+I:
-//		if(opsize(p->op) == 2)
-//		{
-//			switch(opsize(p->kids[0]->op))
-//			{
-//			case 1:	//U1 -> I2
-//				print("\tmov\t\tr6, 0xFF\n");
-//				print("\tand\t\t%s, %s, r6\n",
-//					p->syms[RX]->x.name,
-//					p->kids[0]->syms[RX]->x.name);
-//				break;
-//
-//			case 2:	//U2 -> I2
-//				print("\tmov\t\t%s, %s\n",
-//					p->syms[RX]->x.name,
-//					p->kids[0]->syms[RX]->x.name);
-//				break;
-//			}
-//		}
-//		break;
-//
-//	case CVI+U:
-//		if(opsize(p->op) == 2 && opsize(p->kids[0]->op) == 1)
-//		{
-//			//U1 -> I2
-//
-//		}
-//		break;
+	case ASGN+I:
+	case ASGN+U:
+	case ASGN+P:
+		if(p->kids[0]->op == VREG+P) { break; }
+		assert(specific(p->kids[0]->op) == ADDRL+P || specific(p->kids[0]->op) == ADDRF+P);
+		assert(opsize(p->op) == 1 || opsize(p->op) == 2);
+
+		print("\tmov\t\t__tmpreg, %d\t\t;emit2a\n", p->kids[0]->syms[0]->x.offset);
+		print("\tadd\t\t__tmpreg, __bp, __tmpreg\t\t;emit2b\n");
+		print("\t%s\t\t__tmpreg, %s\t\t;emit2c\n", opsize(p->op) == 2 ? "st" : "stb", p->kids[1]->syms[RX]->x.name);
+		break;
 	}
 }
 
@@ -186,7 +174,7 @@ static void local(Symbol p)
 //	|____________________|
 //	|                    |
 //	|  arguments         |
-//	|____________________| 10  NOTE: if the function returns a structure, the last actual argument will be 
+//	|____________________| 10*  NOTE: if the function returns a structure, the last actual argument will be
 //	|  return  (lo)      | 9         a pointer to an area of memory to return the structure in.
 //	|__________(hi)______| 8         the last "real" argument will be at bp+14
 //	|  saves r1(lo)      | 7
@@ -205,18 +193,25 @@ static void local(Symbol p)
 //	|                    | LOW ADDRESSES
 //
 //////////////
+//* if the function returns a structure, the last actual argument will be
+//	a pointer to an area of memory to return the structure in.
+//	the last "real" argument will be at 2 higher
+//
+//  if the function doesn't return anything, r0 is also saved, the last actual argument
+//  will be at 2 higher
 static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 {
 	int i;
 
 	//function start
-	if(f->sclass != STATIC)
-	{
-		print(".global ");
-	}
+	print(".pad 2\n");
+	if(f->sclass != STATIC)	{ print(".global "); }
 	print("%s:\n", f->x.name);
 
+	int voidfunc = f->type->type->op == VOID;
+
 	//save temps + frame pointer, set up frame pointer
+	if(voidfunc)	{ print("\tpush\tr0\n"); }
 	print(
 		"\tpush\tr1\n"
 		"\tpush\tr2\n"
@@ -228,6 +223,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	usedmask[0] = usedmask[1] = 0;
 	freemask[0] = freemask[1] = ~(unsigned)0;
 	offset = 10; //saved registers + return address
+	offset = voidfunc ? 12 : 10;
 
 	for (i = 0; callee[i]; i++)
 	{
@@ -266,7 +262,9 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 		"\tpop\t\t__bp\n"
 		"\tpop\t\tr3\n"
 		"\tpop\t\tr2\n"
-		"\tpop\t\tr1\n"
+		"\tpop\t\tr1\n");
+	if(voidfunc)	{ print("\tpop\tr0\n"); }
+	print(
 		"\tret\n"
 		";;end %s\n\n", f->x.name);
 }
@@ -370,7 +368,7 @@ static void address(Symbol q, Symbol p, long n)
 static void global(Symbol p)
 {
 	print(".pad\t%d\n", p->type->align);
-	print(".global %s:\n");
+	print(".global %s:\n", p->x.name);
 }
 
 static void segment(int n)
