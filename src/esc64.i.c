@@ -90,16 +90,22 @@ static void target(Node p)
 
 	case DIV+I:
 	case DIV+U:
-	case MOD+I:
-	case MOD+U:
 	case MUL+I:
 	case MUL+U:
 	case LSH+I:
 	case LSH+U:
 	case RSH+I:
 	case RSH+U:
-		assert(opsize(p->op) == 2 && "target(): div/mod/mul/shift opsize != 2");
+		assert(opsize(p->op) == 2 && "target(): div/mul/shift opsize != 2");
 		setreg(p, ireg[0]);
+		rtarget(p, 0, ireg[0]);
+		rtarget(p, 1, ireg[1]);
+		break;
+		
+	case MOD+I:
+	case MOD+U:
+		assert(opsize(p->op) == 2 && "target(): mod opsize != 2");
+		setreg(p, ireg[1]);
 		rtarget(p, 0, ireg[0]);
 		rtarget(p, 1, ireg[1]);
 		break;
@@ -116,7 +122,17 @@ static void clobber(Node p)
 	switch (specific(p->op))
 	{
 	case ASGN+B:
-		spill(2, IREG, p);
+		spill(1 << 2, IREG, p);
+		break;
+		
+	case DIV+I:
+	case DIV+U:
+		spill(1 << 1, IREG, p);
+		break;
+		
+	case MOD+I:
+	case MOD+U:
+		spill(1 << 0, IREG, p);
 		break;
 //	case CALL + I:
 //	case CALL + P:

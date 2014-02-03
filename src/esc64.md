@@ -311,10 +311,10 @@ reg8:	CVUU1(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUU1(reg16)\n"		1
 
 reg16:	DIVI2(reg16, reg16)			"\tcall		__sdiv16\n"					1
 reg16:	DIVU2(reg16, reg16)			"\tcall		__udiv16\n"					1
-reg16:	MODI2(reg16, reg16)			"\tcall		__smod16\n"					1
-reg16:	MODU2(reg16, reg16)			"\tcall		__umod16\n"					1
-reg16:	MULI2(reg16, reg16)			"\tcall		__smul16\n"					1
-reg16:	MULU2(reg16, reg16)			"\tcall		__umul16\n"					1
+reg16:	MODI2(reg16, reg16)			"\tcall		__sdiv16\n"					1
+reg16:	MODU2(reg16, reg16)			"\tcall		__udiv16\n"					1
+reg16:	MULI2(reg16, reg16)			"\tcall		__mul16\n"					1
+reg16:	MULU2(reg16, reg16)			"\tcall		__mul16\n"					1
 
 
 reg16:	ADDI2(reg16, reg16)			"\tadd		%c, %0, %1\n"		1
