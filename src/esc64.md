@@ -336,13 +336,14 @@ reg16:	RSHI2(reg16, reg16)			"\tcall\t__shr16\n"				1
 reg16:	RSHU2(reg16, reg16)			"\tcall\t__shr16\n"				1
 reg16:	BCOMI2(reg16)				"\tnot		%c, %0\n"				1
 reg16:	BCOMU2(reg16)				"\tnot		%c, %0\n"				1
-reg16:	NEGI2(reg16)				"\tnot\t\t%cm %0\n\tinc\t\t%c, %c\n"		1
+reg16:	NEGI2(reg16)				"\tnot\t\t%c, %0\n\tinc\t\t%c, %c\n"		1
 
 
 reg8:	LOADI1(reg16)				"\tmov		%c, %0\t\t;reg8:	LOADI1(reg16)\n"				move(a)
 reg8:	LOADU1(reg16)				"\tmov		%c, %0\t\t;reg8:	LOADU1(reg16)\n"				move(a)
 reg16:	LOADI2(reg16)				"\tmov		%c, %0\t\t;reg16:	LOADI2(reg16)\n"				move(a)
 reg16:	LOADU2(reg16)				"\tmov		%c, %0\t\t;reg16:	LOADU2(reg16)\n"				move(a)
+reg16:	LOADP2(reg16)				"\tmov		%c, %0\t\t;reg16:	LOADP2(reg16)\n"				move(a)
 
 
 stmt:	LABELV						"# labelv\n"

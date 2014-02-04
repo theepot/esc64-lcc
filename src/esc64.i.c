@@ -158,7 +158,11 @@ static void emit2(Node p)
 	case ASGN+I:
 	case ASGN+U:
 	case ASGN+P:
-		if(p->kids[0]->op == VREG+P) { break; }
+		if(p->kids[0]->op == VREG+P)
+		{
+			fprint(stderr, "emit2(): case ASGN: p->kids[0]->op == VREG+P\n");
+			break;
+		}
 		assert(specific(p->kids[0]->op) == ADDRL+P || specific(p->kids[0]->op) == ADDRF+P);
 		assert(opsize(p->op) == 1 || opsize(p->op) == 2);
 
