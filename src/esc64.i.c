@@ -152,7 +152,7 @@ static void emit2(Node p)
 	case LABEL+V:
 		assert(p->syms[0]);
 		if(p->syms[0]->sclass != STATIC && !p->syms[0]->generated)	{ print(".global "); }
-		print("%s:\n", p->syms[0]->x.name);
+		print("%s:\t;emit2(): case LABEL\n", p->syms[0]->x.name);
 		break;
 
 	case ASGN+I:
@@ -226,7 +226,7 @@ static void function(Symbol f, Symbol caller[], Symbol callee[], int ncalls)
 	//function start
 	print(".pad 2\n");
 	if(f->sclass != STATIC)	{ print(".global "); }
-	print("%s:\n", f->x.name);
+	print("%s:\t;function()\n", f->x.name);
 
 	int voidfunc = f->type->type->op == VOID;
 
@@ -388,7 +388,8 @@ static void address(Symbol q, Symbol p, long n)
 static void global(Symbol p)
 {
 	print(".pad\t%d\n", p->type->align);
-	print(".global %s:\n", p->x.name);
+	if(p->sclass != STATIC && !p->generated)	{ print(".global "); }
+	print("%s:\t;global()\n", p->x.name);
 }
 
 static void segment(int n)
