@@ -160,7 +160,7 @@ static void emit2(Node p)
 	case ASGN+P:
 		if(p->kids[0]->op == VREG+P)
 		{
-			fprint(stderr, "emit2(): case ASGN: p->kids[0]->op == VREG+P\n");
+			//fprint(stderr, "emit2(): case ASGN: p->kids[0]->op == VREG+P\n");
 			break;
 		}
 		assert(specific(p->kids[0]->op) == ADDRL+P || specific(p->kids[0]->op) == ADDRF+P);
@@ -371,7 +371,7 @@ static void defsymbol(Symbol p)
 
 static void address(Symbol q, Symbol p, long n)
 {
-	fprint(stderr, "address(): q=%s is at p->x.offset(%d) + n(%d)\n", p->x.name, p->x.offset, n);
+	//fprint(stderr, "address(): q=%s is at p->x.offset(%d) + n(%d)\n", p->x.name, p->x.offset, n);
 
 	if (p->scope == GLOBAL || p->sclass == STATIC || p->sclass == EXTERN)
 	{
