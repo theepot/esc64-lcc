@@ -294,7 +294,7 @@ reg8:	CVUU1(INDIRU2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVUU1(INDIRU2(reg16))\n"		1
 reg16:	CVUU2(INDIRU1(reg16))	"\tldb		%c, %0\t\t;reg16:	CVUU2(INDIRU1(reg16))\n"		1
 
 
-reg16:	CVII2(reg8)				"\tcall		__sext8to16\n"					1
+reg16:	CVII2(reg8)				"\tsxt		%c, %0\n"						1
 
 reg16:	CVUI2(reg8)				"\tmov\t\t__tmpreg, 0xFF\n\tand\t\t%c, %0, __tmpreg\t;LCC: CVUI1(reg8)\n"	1
 reg16:	CVUI2(reg16)			"\tmov\t\t%c, %0\t;LCC: CVUI2(reg16)\n"		1

@@ -75,12 +75,12 @@ static void target(Node p)
 		break;
 
 	case CVI+I:
-		if(opsize(p->op) == 2)
+		/*if(opsize(p->op) == 2)
 		{
 			assert(opsize(p->kids[0]->op) == 1 && "target(): CVI+I");
 			rtarget(p, 0, ireg[0]);
 			setreg(p, ireg[0]);
-		}
+		}*/
 		break;
 
 	case ASGN+B:
