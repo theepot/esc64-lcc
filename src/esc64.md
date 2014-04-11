@@ -267,13 +267,13 @@ stmt:	ASGNP2(reg16, reg16)			"\tst		%0, %1\n"		1
 stmt:	ASGNB(reg16, INDIRB(reg16))		"\tmov\t\tr2, %a\t\t\t;stmt: ASGNB(reg16, INDIRB(reg16)) (0)\n\tcall\t__memcpy\t\t;stmt: ASGNB(reg16, INDIRB(reg16)) (1)\n"	1
 
 
-stmt:	ASGNI1(off, reg8)			"# asgn off\n"		1
-stmt:	ASGNU1(off, reg8)			"# asgn off\n"		1
+stmt:	ASGNI1(off, reg8)			"\tsto8(%0, %1)\n"	1
+stmt:	ASGNU1(off, reg8)			"\tsto8(%0, %1)\n"	1
 
-stmt:	ASGNI2(off, reg16)			"# asgn off\n"		1
-stmt:	ASGNU2(off, reg16)			"# asgn off\n"		1
+stmt:	ASGNI2(off, reg16)			"\tsto16(%0, %1)\n"	1
+stmt:	ASGNU2(off, reg16)			"\tsto16(%0, %1)\n"	1
 
-stmt:	ASGNP2(off, reg16)			"# asgn off\n"		1
+stmt:	ASGNP2(off, reg16)			"\tsto16(%0, %1)\n"	1
 
 
 reg8:	INDIRI1(reg16)			"\tldb		%c, %0\n"		1
@@ -283,6 +283,14 @@ reg16:	INDIRI2(reg16)			"\tld		%c, %0\n"		1
 reg16:	INDIRU2(reg16)			"\tld		%c, %0\n"		1
 
 reg16:	INDIRP2(reg16)			"\tld		%c, %0\t\t;reg16: INDIRP2(reg16)\n"		1
+
+reg8:	INDIRI1(off)			"\tldo8(%c, %0)\n"		1
+reg8:	INDIRU1(off)			"\tldo8(%c, %0))\n"		1
+
+reg16:	INDIRI2(off)			"\tldo16(%c, %0)\n"		1
+reg16:	INDIRU2(off)			"\tldo16(%c, %0)\n"		1
+
+reg16:	INDIRP2(off)			"\tldo16(%c, %0)\n"		1
 
 
 reg8:	CVII1(INDIRI2(reg16))	"\tldb		%c, %0\t\t;reg8:	CVII1(INDIRI2(reg16))\n"		1
@@ -374,12 +382,8 @@ stmt:	NEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 con:	ADDRGP2     				"%a"
 reg16:	ADDRGP2     				"\tmov\t\t%c, %a\t\t;reg16: ADDRGP2\n"	1
 
-reg16:	ADDRFP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRFP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRFP2(1)\n"		1
-off:	ADDRFP2						"# addrfp2"
-
-reg16:	ADDRLP2						"\tmov\t\t__tmpreg, %a\t\t\t;reg16: ADDRLP2(0)\n\tadd\t\t%c, __bp, __tmpreg\t\t;reg16: ADDRLP2(1)\n"		1
-off:	ADDRLP2						"# addrlp2"
-
+off:	ADDRLP2						"__bp, %a"
+off:	ADDRFP2						"__bp, %a"
 
 reg16:	CALLI2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
 reg16:	CALLP2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
