@@ -285,7 +285,7 @@ reg16:	INDIRU2(reg16)			"\tld		%c, %0\n"		1
 reg16:	INDIRP2(reg16)			"\tld		%c, %0\t\t;reg16: INDIRP2(reg16)\n"		1
 
 reg8:	INDIRI1(off)			"\tldo8(%c, %0)\n"		1
-reg8:	INDIRU1(off)			"\tldo8(%c, %0))\n"		1
+reg8:	INDIRU1(off)			"\tldo8(%c, %0)\n"		1
 
 reg16:	INDIRI2(off)			"\tldo16(%c, %0)\n"		1
 reg16:	INDIRU2(off)			"\tldo16(%c, %0)\n"		1
