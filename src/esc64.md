@@ -379,11 +379,14 @@ stmt:	NEI2(reg16, reg16)			"\tscmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 stmt:	NEU2(reg16, reg16)			"\tcmp\t\t%0, %1\n\tjne\t\t%a\n"		1
 
 
-con:	ADDRGP2     				"%a"
-reg16:	ADDRGP2     				"\tmov\t\t%c, %a\t\t;reg16: ADDRGP2\n"	1
+con:	ADDRGP2    				"%a"
+reg16:	ADDRGP2    				"\tmov\t\t%c, %a\t\t;reg16: ADDRGP2\n"	1
 
-off:	ADDRLP2						"__bp, %a"
-off:	ADDRFP2						"__bp, %a"
+off:	ADDRLP2					"__bp, %a"
+off:	ADDRFP2					"__bp, %a"
+
+reg16:	off						"\tmvo16(%c, %0)\n"		1
+
 
 reg16:	CALLI2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
 reg16:	CALLP2(reg16)			"\tcall\t%0\n\tmov\t\t__tmpreg, %a\n\tadd\t\tsp, sp, __tmpreg\n"		1
