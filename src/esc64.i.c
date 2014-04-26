@@ -147,6 +147,7 @@ static void clobber(Node p)
 
 static void emit2(Node p)
 {
+	const char* shift_inst = "shr";
 	switch(specific(p->op))
 	{
 	case LABEL+V:
@@ -170,6 +171,29 @@ static void emit2(Node p)
 		print("\tadd\t\t__tmpreg, __bp, __tmpreg\t\t;emit2b\n");
 		print("\t%s\t\t__tmpreg, %s\t\t;emit2c\n", opsize(p->op) == 2 ? "st" : "stb", p->kids[1]->syms[RX]->x.name);
 		break;
+		
+	case LSH+I:
+	case LSH+U:
+		shift_inst = "shl";
+	case RSH+I:
+	case RSH+U:
+	{
+	#define PRINT_SHIFT(dest, src, i)	print("\t%s\t\t%s, %s\t\t;%s %s, %s (%d)\n", shift_inst, (dest), (src), shift_inst, (dest), (src), (i))
+		unsigned i, n = p->kids[1]->syms[0]->u.c.v.i & 0xF;
+		const char *dest, *src;
+		if(n > 0)
+		{
+			//dest = p->kids[0]->syms[RX]->x.name;
+			dest = p->syms[RX]->x.name;
+			src = p->kids[0]->syms[RX]->x.name;
+			PRINT_SHIFT(dest, src, 0);
+			for(i = 1; i < n; ++i)
+			{
+				PRINT_SHIFT(dest, dest, i);
+			}
+		}
+	#undef PRINT_SHIFT
+	} break;
 	}
 }
 

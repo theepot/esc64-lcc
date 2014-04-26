@@ -29,6 +29,9 @@
 #define RIGHT_CHILD(p) ((p)->kids[1])
 #define STATE_LABEL(p) ((p)->x.state)
 
+#define NODE_CNSTVAL(p)		((p)->syms[0]->u.c.v.i)
+#define NODE_REGNAME(p)		((p)->syms[RX]->x.name)
+
 static void address(Symbol, Symbol, long);
 static void blkfetch(int, int, int, int);
 static void blkloop(int, int, int, int, int, int[]);

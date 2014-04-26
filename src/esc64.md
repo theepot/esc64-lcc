@@ -233,27 +233,34 @@ stmt:	ASGNU2(VREGP, reg16)	"# write register\n"
 stmt:	ASGNP2(VREGP, reg16)	"# write register\n"
 
 
-con:	CNSTI1					"%a"
-con:	CNSTU1					"%a"
+con8:	CNSTI1					"%a"
+con8:	CNSTU1					"%a"
 
-con:	CNSTI2					"%a"
-con:	CNSTU2					"%a"
+con16:	CNSTI2					"%a"
+con16:	CNSTU2					"%a"
+
+con16:	CNSTP2					"%a"
+
+zero:	CNSTI1					"0"		range(a, 0, 0)
+zero:	CNSTU1					"0"		range(a, 0, 0)
+zero:	CNSTI2					"0"		range(a, 0, 0)
+zero:	CNSTU2					"0"		range(a, 0, 0)
+zero:	CNSTP2					"0"		range(a, 0, 0)
 
 
-reg16:	con						"\tmov		%c, %0\t\t\t\t;reg16: con\n"	1
+con:	con8					"%a"
+con:	con16					"%a"
+
+
+reg16:	con16					"\tmov		%c, %0\t\t\t\t;reg16: con16\n"		2
+reg8:	con8					"\tmov		%c, %0\t\t\t\t;reg8: con8\n"		2
+
+reg16:	zero					"\txor		%c, %c, %c\t\t\t\t;reg16: zero\n"	1
+reg8:	zero					"\txor		%c, %c, %c\t\t\t\t;reg8: zero\n"	1
 
 
 stmt:	reg8					""
 stmt:	reg16					""
-
-
-reg8:	CNSTI1  				"\tmov		%c, %a\n"		1
-reg16:	CNSTI2  				"\tmov		%c, %a\n"		1
-
-reg8:	CNSTU1  				"\tmov		%c, %a\n"		1
-reg16:	CNSTU2  				"\tmov		%c, %a\n"		1
-
-reg16:	CNSTP2  				"\tmov		%c, %a\n"		1
 
 
 stmt:	ASGNI1(reg16, reg8)				"\tstb		%0, %1\n"		1
@@ -338,10 +345,20 @@ reg16:	SUBI2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 reg16:	SUBP2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 reg16:	SUBU2(reg16, reg16)			"\tsub		%c, %0, %1\n"		1
 
-reg16:	LSHI2(reg16, reg16)			"\tcall\t__shl16\n"				1
-reg16:	LSHU2(reg16, reg16)			"\tcall\t__shl16\n"				1
-reg16:	RSHI2(reg16, reg16)			"\tcall\t__shr16\n"				1
-reg16:	RSHU2(reg16, reg16)			"\tcall\t__shr16\n"				1
+
+reg16:	LSHI2(reg16, reg16)			"\tcall\t__shl16\n"				3
+reg16:	LSHU2(reg16, reg16)			"\tcall\t__shl16\n"				3
+
+reg16:	LSHU2(reg16, con)			"# lshu2 con\n"					range(a->kids[1], 1, 4)
+reg16:	LSHI2(reg16, con)			"# lshi2 con\n"					range(a->kids[1], 1, 4)
+
+reg16:	RSHI2(reg16, reg16)			"\tcall\t__shr16\n"				3
+reg16:	RSHU2(reg16, reg16)			"\tcall\t__shr16\n"				3
+
+reg16:	RSHU2(reg16, con)			"# rshu2 con\n"					range(a->kids[1], 1, 4)
+reg16:	RSHI2(reg16, con)			"# rshi2 con\n"					range(a->kids[1], 1, 4)
+
+
 reg16:	BCOMI2(reg16)				"\tnot		%c, %0\n"				1
 reg16:	BCOMU2(reg16)				"\tnot		%c, %0\n"				1
 reg16:	NEGI2(reg16)				"\tnot\t\t%c, %0\n\tinc\t\t%c, %c\n"		1
